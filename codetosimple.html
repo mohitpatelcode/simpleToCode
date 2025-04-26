@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>String Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>String Converter</h2>
+    <input type="text" id="inputText" placeholder="Enter your string here">
+    <div>
+        <button onclick="handleCode()">Code</button>
+        <button onclick="handleSimple()">Simple</button>
+    </div>
+    <div id="output"></div>
+</div>
+
+<script>
+    function toUpperCaseChar1(ch) {
+        const map = { a:'b', b:'z', c:'k', d:'r', e:'v', f:'h', g:'q', h:'c', i:'w', j:'i', k:'e', l:'x', m:'s', n:'p', o:'a', p:'o', q:'j', r:'t', s:'d', t:'u', u:'m', v:'f', w:'g', x:'n', y:'y', z:'l' };
+        return map[ch] || ch;
+    }
+
+    function toUpperCaseChar2(ch) {
+        const map = { b:'a', z:'b', k:'c', r:'d', v:'e', h:'f', q:'g', c:'h', w:'i', i:'j', e:'k', x:'l', s:'m', p:'n', a:'o', o:'p', j:'q', t:'r', d:'s', u:'t', m:'u', f:'v', g:'w', n:'x', y:'y', l:'z' };
+        return map[ch] || ch;
+    }
+
+    function toLowerCaseChar1(ch) {
+        const map = { A:'D', B:'L', C:'R', D:'T', E:'B', F:'K', G:'E', H:'P', I:'V', J:'U', K:'A', L:'J', M:'F', N:'O', O:'Z', P:'S', Q:'W', R:'I', S:'C', T:'G', U:'Q', V:'Y', W:'X', X:'M', Y:'H', Z:'N' };
+        return map[ch] || ch;
+    }
+
+    function toLowerCaseChar2(ch) {
+        const map = { D:'A', L:'B', R:'C', T:'D', B:'E', K:'F', E:'G', P:'H', V:'I', U:'J', A:'K', J:'L', F:'M', O:'N', Z:'O', S:'P', W:'Q', I:'R', C:'S', G:'T', Q:'U', Y:'V', X:'W', M:'X', H:'Y', N:'Z' };
+        return map[ch] || ch;
+    }
+
+    function shiftChar1(ch, shift) {
+        if (ch >= 'a' && ch <= 'z') {
+            let code = ch.charCodeAt(0) + shift;
+            if (code > 'z'.charCodeAt(0)) code = (code - 'z'.charCodeAt(0)) + 'a'.charCodeAt(0) - 1;
+            return String.fromCharCode(code);
+        }
+        if (ch >= 'A' && ch <= 'Z') {
+            let code = ch.charCodeAt(0) + shift;
+            if (code > 'Z'.charCodeAt(0)) code = (code - 'Z'.charCodeAt(0)) + 'A'.charCodeAt(0) - 1;
+            return String.fromCharCode(code);
+        }
+        return ch;
+    }
+
+    function shiftChar2(ch, shift) {
+        if (ch >= 'a' && ch <= 'z') {
+            let code = ch.charCodeAt(0) - shift;
+            if (code < 'a'.charCodeAt(0)) code = 'z'.charCodeAt(0) - ('a'.charCodeAt(0) - code - 1);
+            return String.fromCharCode(code);
+        }
+        if (ch >= 'A' && ch <= 'Z') {
+            let code = ch.charCodeAt(0) - shift;
+            if (code < 'A'.charCodeAt(0)) code = 'Z'.charCodeAt(0) - ('A'.charCodeAt(0) - code - 1);
+            return String.fromCharCode(code);
+        }
+        return ch;
+    }
+
+    function stringFormation1(input) {
+        input = input.trim().replace(/\s+/g, ' ');
+        return input.split(' ').map(word => {
+            return [...word].map((ch, j) => {
+                if (!/[a-zA-Z]/.test(ch)) return ch;
+                return shiftChar1(ch, j+1);
+            }).join('');
+        }).join(' ');
+    }
+
+    function stringFormation2(input) {
+        input = input.trim().replace(/\s+/g, ' ');
+        return input.split(' ').map(word => {
+            return [...word].map((ch, j) => {
+                if (!/[a-zA-Z]/.test(ch)) return ch;
+                return shiftChar2(ch, j+1);
+            }).join('');
+        }).join(' ');
+    }
+
+    function convertString1(input) {
+        input = stringFormation1(input);
+        let result = "";
+        for (let ch of input) {
+            if (ch >= 'a' && ch <= 'z') result += toUpperCaseChar1(ch);
+            else if (ch >= 'A' && ch <= 'Z') result += toLowerCaseChar1(ch);
+            else result += ch;
+        }
+        return result;
+    }
+
+    function convertString2(input) {
+        input = input.trim();
+        let result = "";
+        for (let ch of input) {
+            if (ch >= 'a' && ch <= 'z') result += toUpperCaseChar2(ch);
+            else if (ch >= 'A' && ch <= 'Z') result += toLowerCaseChar2(ch);
+            else result += ch;
+        }
+        result = stringFormation2(result);
+        return result;
+    }
+
+    function handleCode() {
+        const input = document.getElementById("inputText").value;
+        document.getElementById("output").innerText = convertString1(input);
+    }
+
+    function handleSimple() {
+        const input = document.getElementById("inputText").value;
+        document.getElementById("output").innerText = convertString2(input);
+    }
+</script>
+
+</body>
+</html>
